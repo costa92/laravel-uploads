@@ -5,6 +5,35 @@ namespace Costalong\LaravelUpload;
 class Upload
 {
 	/**
+	 * @var
+	 */
+	public static $drive;
+
+	/***
+	 * Upload constructor.
+	 */
+	public function __construct()
+	{
+
+	}
+
+	/**
+	 * @param $drive
+	 */
+	public static function setDrive($drive)
+	{
+		self::$drive = $drive;
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getDrive()
+	{
+		return self::$driv ? self::$driv : 'local';
+	}
+
+	/**
 	 * 上传图片
 	 *
 	 * @param        $name
@@ -15,7 +44,9 @@ class Upload
 	public static function image($name, $path = 'uploads')
 	{
 		$allowExtension = ['jpg', 'jpeg', 'png', 'gif', 'bmp'];
-		return LocalFile::file($name, $path, $allowExtension);
+		if (self::getDrive() === 'local') {
+			return LocalFile::file($name, $path, $allowExtension);
+		}
 	}
 
 }
