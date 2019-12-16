@@ -30,7 +30,7 @@ class Upload
 	 */
 	public static function getDrive()
 	{
-		return self::$driv ? self::$driv : 'local';
+		return self::$drive ? self::$drive : 'local';
 	}
 
 	/**
