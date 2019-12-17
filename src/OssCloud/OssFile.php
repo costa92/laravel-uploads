@@ -105,11 +105,51 @@ class OssFile
 		if (!is_array($file)) {
 			$file = [$file];
 		}
-
 		$path = FileFunction::getPath($path, $childPath);
 
-		$ossClient = $this->connOss();
-		$file = '/Users/costalong/Desktop/test.jpg';
-		$ossClient->uploadFile(self::getBucket(), $name, $file);
+		// 上传成功的文件
+		$success = [];
+		// 循环上传
+		foreach ($file as $k => $v) {
+			$isValid = FileFunction::isValid($v);
+			if ($isValid) {
+				return $isValid;
+			}
+			// 获取上传的文件名
+			$oldName = $v->getClientOriginalName();
+			// 获取文件后缀
+			$extension = strtolower($v->getClientOriginalExtension());
+			$isAllowExtension = FileFunction::isUploadExtension($extension, $allowExtension, $oldName);
+			if ($isAllowExtension) {
+				return $extension;
+			}
+			// 临时目录
+			$tmpPath = '/tmp/upload';
+			FileFunction::mkdirPath($tmpPath);
+			// 组合新的文件名
+			$newName = uniqid() . '.' . $extension;
+			$v->move($tmpPath, $newName);
+			$filePatch = $tmpPath . '/' . $newName;
+
+			$ossFilePath = $path . '/' . $newName;
+
+			$ossClient = $this->connOss();
+
+			$ossClient->uploadFile(self::getBucket(), $ossFilePath, $filePatch);
+
+			FileFunction::deleteTmpFile($filePatch);
+
+			$success[] = [
+				'name' => $oldName,
+				'path' => 'https://' . self::$endpoint . '/' . $path . '/' . $newName
+			];
+		}
+
+		$data = [
+			'status_code' => 200,
+			'message' => '上传成功',
+			'data' => $success
+		];
+		return $data;
 	}
 }

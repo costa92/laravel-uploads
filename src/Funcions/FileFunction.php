@@ -75,7 +75,9 @@ class FileFunction
 	public static function mkdirPath($publicPath)
 	{
 		// 如果目录不存在；先创建目录
-		is_dir($publicPath) || mkdir($publicPath, 0755, true);
+		if (!is_dir($publicPath)) {
+			mkdir($publicPath, 0755, true);
+		}
 	}
 
 	/**
