@@ -5,7 +5,7 @@ namespace LaravelUpload\Functions;
 
 class FileFunction
 {
-	public static function hasFile()
+	public static function hasFile($name)
 	{
 		// 判断请求中是否包含name=file的上传文件
 		if (!request()->hasFile($name)) {
@@ -61,8 +61,8 @@ class FileFunction
 	 * @param $file_name
 	 * @return bool
 	 */
-	public static function deleteTmpFile($file_name)
+	public static function deleteTmpFile($filename)
 	{
-		return unlink($file_name);
+		return unlink($filename);
 	}
 }
