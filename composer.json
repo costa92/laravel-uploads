@@ -1,18 +1,21 @@
 {
-    "name": "costalong/laravel-upload",
-    "description": "upload",
-    "type": "library",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "costalong",
-            "email": "longqiuhong@163.com"
-        }
-    ],
-    "require": {},
-    "autoload": {
-        "psr-4": {
-            "Costalong\\LaravelUpload\\": "src/"
-        }
+  "name": "costalong/laravel-upload",
+  "description": "upload",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "costalong",
+      "email": "longqiuhong@163.com"
     }
+  ],
+  "require": {
+    "aliyuncs/oss-sdk-php": "~2.2.1",
+    "phpunit/phpunit": "^8.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "LaravelUpload\\": "src/"
+    }
+  }
 }

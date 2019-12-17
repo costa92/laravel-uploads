@@ -1,6 +1,6 @@
 <?php
 
-namespace Costalong\LaravelUpload;
+namespace LaravelUpload;
 
 class Upload
 {
