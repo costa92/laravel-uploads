@@ -128,17 +128,15 @@ class OssFile
 			FileFunction::mkdirPath($tmpPath);
 			// 组合新的文件名
 			$newName = uniqid() . '.' . $extension;
+
 			$v->move($tmpPath, $newName);
+
 			$filePatch = $tmpPath . '/' . $newName;
-
 			$ossFilePath = $path . '/' . $newName;
-
 			$ossClient = $this->connOss();
 
 			$ossClient->uploadFile(self::getBucket(), $ossFilePath, $filePatch);
-
 			FileFunction::deleteTmpFile($filePatch);
-
 			$success[] = [
 				'name' => $oldName,
 				'path' => 'https://' . self::$endpoint . '/' . $path . '/' . $newName
