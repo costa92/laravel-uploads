@@ -35,6 +35,40 @@ class FileFunction
 	}
 
 	/**
+	 * 判断文件是否有效
+	 * @param $file
+	 * @return array
+	 */
+	public static function isValid($file)
+	{
+		if (!$file->isValid()) {
+			$data = [
+				'status_code' => 500,
+				'message' => '文件上传出错'
+			];
+			return $data;
+		}
+	}
+
+	/**
+	 * 判断是否为上传的类型
+	 * @param $extension
+	 * @param array $allowExtension
+	 * @param $oldName
+	 * @return array
+	 */
+	public static function isUploadExtension($extension, $allowExtension = [], $oldName)
+	{
+		if (!empty($allowExtension) && !in_array($extension, $allowExtension)) {
+			$data = [
+				'status_code' => 500,
+				'message' => $oldName . '的文件类型不被允许'
+			];
+			return $data;
+		}
+	}
+
+	/**
 	 * 先创建目录
 	 * @param $publicPath
 	 */
@@ -51,7 +85,7 @@ class FileFunction
 	 */
 	public static function getTmpFile()
 	{
-		$tmpfname       = tempnam("/tmp", "dir");
+		$tmpfname = tempnam("/tmp", "dir");
 		chmod($tmpfname, 0777);
 		return $tmpfname;
 	}

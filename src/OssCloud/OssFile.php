@@ -43,18 +43,33 @@ class OssFile
 	 */
 	public function __construct($accessKeyId = '', $accessKeySecret = '', $endpoint = '', $isCName = '')
 	{
-		self::$accessKeyId = $accessKeyId ? $accessKeyId : config('filesystems.oss.access_id');
-		self::$accessKeySecret = $accessKeySecret ? $accessKeySecret : config('filesystems.oss.access_key');
-		self::$endpoint = $accessKeySecret ? $accessKeySecret : config('filesystems.oss.endpoint');
-		self::$isCName = config('filesystems.oss.endpoint') ? true : false;
+		$config = $this->getConfig();
+		self::$accessKeyId = $accessKeyId ? $accessKeyId : $config['access_id'];
+		self::$accessKeySecret = $accessKeySecret ? $accessKeySecret : $config['access_key'];
+		self::$endpoint = $accessKeySecret ? $accessKeySecret : $config['endpoint'];
+		self::$isCName = $config['endpoint'] ? true : false;
+		self::$bucket = $config['bucket'];
 	}
 
+	/**
+	 * @return \Illuminate\Config\Repository|mixed
+	 */
+	protected function getConfig()
+	{
+		return config('filesystems.disks.oss');
+	}
+
+	/**
+	 * @param $bucket
+	 */
 	public function setBucket($bucket)
 	{
 		self::$bucket = $bucket;
 	}
 
-
+	/**
+	 * @return \Illuminate\Config\Repository|mixed
+	 */
 	public function getBucket()
 	{
 		return self::$bucket ? self::$bucket : config('filesystems.oss.bucket');
