@@ -25,6 +25,7 @@ class Upload
 	public static function setDrive($drive)
 	{
 		self::$drive = $drive;
+		return self::class;
 	}
 
 	/**
