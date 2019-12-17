@@ -1,7 +1,7 @@
 <?php
 
 
-namespace LaravelUpload\Functions;
+namespace Costalong\LaravelUpload\Functions;
 
 class FileFunction
 {

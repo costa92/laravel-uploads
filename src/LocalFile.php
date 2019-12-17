@@ -1,7 +1,7 @@
 <?php
 
 
-namespace LaravelUpload;
+namespace Costalong\LaravelUpload;
 
 
 class LocalFile

@@ -1,6 +1,8 @@
 <?php
 
-namespace LaravelUpload;
+namespace Costalong\LaravelUpload;
+
+use Costalong\LaravelUpload\OssCloud\OssFile;
 
 class Upload
 {
@@ -46,6 +48,8 @@ class Upload
 		$allowExtension = ['jpg', 'jpeg', 'png', 'gif', 'bmp'];
 		if (self::getDrive() === 'local') {
 			return LocalFile::file($name, $path, $allowExtension);
+		}elseif (self::getDrive() === 'oss') {
+			return (new OssFile())->file($name, $path, $allowExtension);
 		}
 	}
 

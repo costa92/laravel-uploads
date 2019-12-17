@@ -1,8 +1,8 @@
 <?php
 
-namespace LaravelUpload\Tests\OssCloud;
+namespace Costalong\LaravelUpload\Tests\OssCloud;
 
-use LaravelUpload\OssCloud\OssFile;
+use Costalong\LaravelUpload\OssCloud\OssFile;
 use PHPUnit\Framework\TestCase;
 
 class UploadTest extends TestCase

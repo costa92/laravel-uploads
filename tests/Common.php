@@ -1,7 +1,7 @@
 <?php
 
 
-namespace LaravelUpload\Tests;
+namespace Costalong\LaravelUpload\Tests;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 

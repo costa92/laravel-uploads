@@ -1,12 +1,9 @@
 <?php
 
 
-namespace LaravelUpload\OssCloud;
+namespace Costalong\LaravelUpload\OssCloud;
 
-
-use LaravelUpload\File;
-use LaravelUpload\Functions\FileFunction;
-use LaravelUpload\VerifyFile;
+use Costalong\LaravelUpload\Functions\FileFunction;
 use OSS\OssClient;
 
 class OssFile
@@ -60,7 +57,7 @@ class OssFile
 
 	public function getBucket()
 	{
-		return self::$bucket;
+		return self::$bucket ? self::$bucket : config('filesystems.oss.bucket');
 	}
 
 	/**
