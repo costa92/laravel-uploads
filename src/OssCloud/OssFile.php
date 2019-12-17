@@ -5,6 +5,7 @@ namespace LaravelUpload\OssCloud;
 
 
 use LaravelUpload\File;
+use LaravelUpload\Functions\FileFunction;
 use LaravelUpload\VerifyFile;
 use OSS\OssClient;
 
@@ -43,12 +44,12 @@ class OssFile
 	/**
 	 * OssFile constructor.
 	 */
-	public function __construct($accessKeyId, $accessKeySecret, $endpoint, $isCName)
+	public function __construct($accessKeyId = '', $accessKeySecret = '', $endpoint = '', $isCName = '')
 	{
-		self::$accessKeyId = $accessKeyId;
-		self::$accessKeySecret = $accessKeySecret;
-		self::$endpoint = $endpoint;
-		self::$isCName = $isCName;
+		self::$accessKeyId = $accessKeyId ? $accessKeyId : config('filesystems.oss.access_id');
+		self::$accessKeySecret = $accessKeySecret ? $accessKeySecret : config('filesystems.oss.access_key');
+		self::$endpoint = $accessKeySecret ? $accessKeySecret : config('filesystems.oss.endpoint');
+		self::$isCName = config('filesystems.oss.endpoint') ? true : false;
 	}
 
 	public function setBucket($bucket)
@@ -83,7 +84,7 @@ class OssFile
 	 */
 	public function file($name, $path = 'uploads', $allowExtension = [], $childPath = true)
 	{
-		$verify = VerifyFile::hasFile($name);
+		$verify = FileFunction::hasFile($name);
 		if ($verify) {
 			return $verify;
 		}
@@ -93,7 +94,7 @@ class OssFile
 			$file = [$file];
 		}
 
-		$path = File::getPath($path, $childPath);
+		$path = FileFunction::getPath($path, $childPath);
 
 		$ossClient = $this->connOss();
 		$file = '/Users/costalong/Desktop/test.jpg';
