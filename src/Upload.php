@@ -49,8 +49,22 @@ class Upload
 		$allowExtension = ['jpg', 'jpeg', 'png', 'gif', 'bmp'];
 		if (self::getDrive() === 'local') {
 			return LocalFile::file($name, $path, $allowExtension);
-		}elseif (self::getDrive() === 'oss') {
+		} elseif (self::getDrive() === 'oss') {
 			return (new OssFile())->file($name, $path, $allowExtension);
+		}
+	}
+
+	/**
+	 * @param $name
+	 * @param $filePath
+	 * @param $path
+	 * @return array
+	 * @throws \OSS\Core\OssException
+	 */
+	public static function uploadFile($name, $filePath, $path)
+	{
+		if (self::getDrive() === 'oss') {
+			return (new OssFile())->uploadFile($name, $filePath, $path);
 		}
 	}
 

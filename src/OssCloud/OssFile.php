@@ -150,4 +150,25 @@ class OssFile
 		];
 		return $data;
 	}
+
+	/**
+	 * 上传文件
+	 * @param $name
+	 * @param $ossFilePath
+	 * @param $filePatch
+	 * @return array
+	 * @throws \OSS\Core\OssException
+	 */
+	public function uploadFile($name, $ossFilePath, $filePatch)
+	{
+		$ossClient = $this->connOss();
+		$ossClient->uploadFile(self::getBucket(), $ossFilePath, $filePatch);
+		FileFunction::deleteTmpFile($filePatch);
+		$success = [
+			'name' => $name,
+			'path' => 'https://' . self::$endpoint . '/' . $filePatch
+		];
+
+		return $success;
+	}
 }
