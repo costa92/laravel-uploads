@@ -87,4 +87,15 @@ class OssAdapter extends FileAdapter
 			throw new \Exception("oss upload file fail:" . $e->getMessage());
 		}
 	}
+
+	/**
+	 * @param $name
+	 * @param $copyName
+	 * @return |null
+	 * @throws \OSS\Core\OssException
+	 */
+	public function copy($name, $copyName)
+	{
+		return $this->connOss()->copyObject($this->getBucket(), $name, $this->getBucket(), $copyName);
+	}
 }
