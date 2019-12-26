@@ -27,7 +27,7 @@ class OssAdapter extends FileAdapter
 	public function __construct($config = [])
 	{
 		$this->config = $config ? $config : OssConfig::getConfig();
-		$this->bucket = $config['bucket'];
+		$this->bucket = $this->config['bucket'];
 	}
 
 	/**
