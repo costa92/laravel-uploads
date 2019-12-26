@@ -10,89 +10,11 @@ class OssFile
 {
 
 	/**
-	 * @var
-	 */
-	protected static $ossClient;
-
-	/**
-	 * @var
-	 */
-	protected static $accessKeyId;
-
-	/**
-	 * @var
-	 */
-	protected static $accessKeySecret;
-	/**
-	 * @var
-	 */
-	protected static $endpoint;
-	/**
-	 * @var
-	 */
-	protected static $isCName;
-
-	/**
-	 * @var
-	 */
-	protected static $bucket;
-
-
-	/**
-	 * OssFile constructor.
-	 */
-	public function __construct($accessKeyId = '', $accessKeySecret = '', $endpoint = '', $isCName = '')
-	{
-		$config = $this->getConfig();
-		self::$accessKeyId = $accessKeyId ? $accessKeyId : $config['access_id'];
-		self::$accessKeySecret = $accessKeySecret ? $accessKeySecret : $config['access_key'];
-		self::$endpoint = $accessKeySecret ? $accessKeySecret : $config['endpoint'];
-		self::$isCName = $config['endpoint'] ? true : false;
-		self::$bucket = $config['bucket'];
-	}
-
-	/**
-	 * @return \Illuminate\Config\Repository|mixed
-	 */
-	protected function getConfig()
-	{
-		return config('filesystems.disks.oss');
-	}
-
-	/**
-	 * @param $bucket
-	 */
-	public function setBucket($bucket)
-	{
-		self::$bucket = $bucket;
-	}
-
-	/**
-	 * @return \Illuminate\Config\Repository|mixed
-	 */
-	public function getBucket()
-	{
-		return self::$bucket ? self::$bucket : config('filesystems.oss.bucket');
-	}
-
-	/**
-	 * @throws \OSS\Core\OssException
-	 */
-	public function connOss()
-	{
-		return self::$ossClient = new OssClient(self::$accessKeyId, self::$accessKeySecret, self::$endpoint, self::$isCName);
-	}
-
-
-	/**
-	 * 上传文件
-	 *
-	 * @param        $name            form 表单中的 name
-	 * @param string $path 文件保存的目录 相对于 /public 目录
-	 * @param array $allowExtension 允许上传的文件后缀
-	 * @param bool $childPath 是否按日期创建目录
-	 *
-	 * @return array
+	 * @param $name
+	 * @param string $path
+	 * @param array $allowExtension
+	 * @param bool $childPath
+	 * @return array|string
 	 */
 	public function file($name, $path = 'uploads', $allowExtension = [], $childPath = true)
 	{
@@ -107,6 +29,7 @@ class OssFile
 		}
 		$path = FileFunction::getPath($path, $childPath);
 
+		$oss = new OssAdapter();
 		// 上传成功的文件
 		$success = [];
 		// 循环上传
@@ -128,19 +51,10 @@ class OssFile
 			FileFunction::mkdirPath($tmpPath);
 			// 组合新的文件名
 			$newName = uniqid() . '.' . $extension;
-
 			$v->move($tmpPath, $newName);
-
 			$filePatch = $tmpPath . '/' . $newName;
 			$ossFilePath = $path . '/' . $newName;
-			$ossClient = $this->connOss();
-
-			$ossClient->uploadFile(self::getBucket(), $ossFilePath, $filePatch);
-			FileFunction::deleteTmpFile($filePatch);
-			$success[] = [
-				'name' => $oldName,
-				'path' => 'https://' . self::$endpoint . '/' . $path . '/' . $newName
-			];
+			$success[] = $oss->file($oldName, $filePatch, $ossFilePath);
 		}
 
 		$data = [
@@ -149,26 +63,5 @@ class OssFile
 			'data' => $success
 		];
 		return $data;
-	}
-
-	/**
-	 * 上传文件
-	 * @param $name
-	 * @param $ossFilePath
-	 * @param $filePatch
-	 * @return array
-	 * @throws \OSS\Core\OssException
-	 */
-	public function uploadFile($name, $ossFilePath, $filePatch)
-	{
-		$ossClient = $this->connOss();
-		$ossClient->uploadFile(self::getBucket(), $ossFilePath, $filePatch);
-		FileFunction::deleteTmpFile($filePatch);
-		$success = [
-			'name' => $name,
-			'path' => 'https://' . self::$endpoint . '/' . $filePatch
-		];
-
-		return $success;
 	}
 }
